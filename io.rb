@@ -1,6 +1,9 @@
-require 'sqlite3'
 require_relative 'nega_posi_analysis'
 require_relative 'acquisition_tweet'
+require_relative 'table_setter'
+
+# 速度の改善考える
+p_o_s_table = set_table()
 
 query_string = gets.chomp
 agent = Agent.new
@@ -10,18 +13,6 @@ text_array = []
 result_tweets.each do |tweet|
   text_array << tweet.full_text
 end
-
-db_name = 'dictionary.db' # データベース名
-table_name = 'Dictionary' # データベースのテーブル名
-db = SQLite3::Database.new(db_name) # データベースのオブジェクト
-noun, verb, adjective, adverb = '名詞', '動詞', '形容詞', '副詞'
-sql = "SELECT string, kana, value FROM #{table_name} WHERE p_o_s = ?"
-# test_data = db.execute("SELECT p_o_s FROM #{table_name}")
-p_o_s_table = {}
-p_o_s_table[:noun] = db.execute(sql, noun)
-p_o_s_table[:verb] = db.execute(sql, verb)
-p_o_s_table[:adjective] = db.execute(sql, adjective)
-p_o_s_table[:adverb] = db.execute(sql, adverb)
 
 text_array.each do |text|
   analyzed_data = text_analyze(text)
